@@ -3,248 +3,725 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habib | Links</title>
-    <meta name="description" content="Connect with Habiboullah Afouk — Developer & Creator. All links in one place.">
+    <title>Habiboullah Afouk — Full-Stack Developer</title>
+    <meta name="description" content="Habiboullah Afouk — Full-Stack Software Developer from Laayoune, Morocco. Building modern web, desktop, and mobile applications.">
+    <meta name="theme-color" content="#07080a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ═══════════════════════════════════════════════
+           DESIGN TOKENS
+           ═══════════════════════════════════════════════ */
+        :root {
+            --bg: #07080a;
+            --bg-elevated: #0d0f12;
+            --surface: #111318;
+            --surface-2: #181a1f;
+            --border: #1e2128;
+            --border-strong: #2a2d35;
+            --text: #e8eaed;
+            --text-dim: #8b8f98;
+            --text-faint: #4a4e57;
+            --accent: #7dd3fc;
+            --accent-bright: #bae6fd;
+            --accent-dim: rgba(125, 211, 252, 0.15);
+            --term-green: #7ee787;
+            --term-amber: #f7a13c;
+            --term-red: #ff6b6b;
+            --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg: #000000;
-            --surface: #1c1c1e;
-            --surface-hover: #2c2c2e;
-            --separator: #38383a;
-            --label: #ffffff;
-            --secondary-label: #8e8e93;
-            --tertiary-label: #636366;
-            --radius: 14px;
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            font-family: var(--sans);
             background: var(--bg);
-            color: var(--label);
+            color: var(--text);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* ═══════════ HERO SECTION ═══════════ */
-        .hero {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            height: 420px;
+        /* ═══════════════════════════════════════════════
+           BOOT SCREEN
+           ═══════════════════════════════════════════════ */
+        .boot-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .boot-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .boot-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 24px;
+        }
+
+        .boot-percent {
+            font-family: var(--mono);
+            font-size: 48px;
+            font-weight: 500;
+            color: var(--accent);
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 12px;
+            tabular-nums: true;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .boot-status {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            height: 16px;
+        }
+
+        .boot-bar-track {
+            width: 220px;
+            height: 2px;
+            background: var(--surface-2);
+            border-radius: 99px;
             overflow: hidden;
         }
 
-        .hero-image {
+        .boot-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 99px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px rgba(125, 211, 252, 0.5);
+        }
+
+        /* ═══════════════════════════════════════════════
+           NOISE / GRAIN OVERLAY
+           ═══════════════════════════════════════════════ */
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.035;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+        }
+
+        /* ═══════════════════════════════════════════════
+           SCANLINES
+           ═══════════════════════════════════════════════ */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.03;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(125, 211, 252, 0.03) 2px,
+                rgba(125, 211, 252, 0.03) 4px
+            );
+        }
+
+        /* ═══════════════════════════════════════════════
+           FLOATING PARTICLES
+           ═══════════════════════════════════════════════ */
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           AMBIENT GLOW
+           ═══════════════════════════════════════════════ */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(120px);
+        }
+
+        .glow-orb--1 {
+            top: 10%;
+            left: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(125, 211, 252, 0.08) 0%, transparent 55%);
+            animation: orbFloat 20s ease-in-out infinite alternate;
+        }
+
+        .glow-orb--2 {
+            bottom: -20%;
+            right: -15%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+            animation: orbFloat 25s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes orbFloat {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(30px, -40px) scale(1.15); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           COVER PHOTO HERO
+           ═══════════════════════════════════════════════ */
+        .cover-hero {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            height: 460px;
+            overflow: hidden;
+            opacity: 0;
+            animation: coverFadeIn 1.2s ease-out 1.2s forwards;
+        }
+
+        @keyframes coverFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .cover-hero__img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center top;
             display: block;
+            filter: contrast(1.03) saturate(0.95);
+            animation: coverZoom 25s ease-in-out infinite alternate;
         }
 
-        /* Fade-to-black gradient overlay */
-        .hero::after {
+        @keyframes coverZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        /* Fade-to-black gradient at the bottom */
+        .cover-hero::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60%;
-            background: linear-gradient(to top, #000000 0%, #000000 10%, rgba(0,0,0,0.85) 35%, rgba(0,0,0,0.4) 65%, transparent 100%);
+            height: 65%;
+            background: linear-gradient(
+                to top,
+                var(--bg) 0%,
+                var(--bg) 8%,
+                rgba(7, 8, 10, 0.88) 30%,
+                rgba(7, 8, 10, 0.45) 60%,
+                transparent 100%
+            );
             pointer-events: none;
         }
 
-        /* Name & subtitle overlaid on hero */
-        .hero-info {
+        /* Name & info overlaid on cover photo */
+        .cover-hero__info {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 2;
             text-align: center;
-            padding: 0 20px 24px;
+            padding: 0 20px 28px;
+        }
+
+        .cover-hero__tag {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cover-hero__tag::before,
+        .cover-hero__tag::after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--border-strong);
+        }
+
+        /* ═══════════════════════════════════════════════
+           MAIN CONTAINER
+           ═══════════════════════════════════════════════ */
+        .shell {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ═══════════════════════════════════════════════
+           CONTENT BELOW COVER
+           ═══════════════════════════════════════════════ */
+        .content-below {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .content-below.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Avatar photo removed — using cover photo hero instead */
+
+        /* Status indicator */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin: 0 auto 16px;
+        }
+
+        .status-dot {
+            position: relative;
+            width: 6px;
+            height: 6px;
+        }
+
+        .status-dot::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: var(--term-green);
+            box-shadow: 0 0 6px var(--term-green);
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: var(--term-green);
+            animation: statusPing 2s ease-out infinite;
+        }
+
+        @keyframes statusPing {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .status-text {
+            color: var(--term-green);
         }
 
         .hero-name {
-            font-size: 30px;
-            font-weight: 700;
+            font-family: var(--sans);
+            font-size: clamp(28px, 7vw, 36px);
+            font-weight: 600;
             letter-spacing: -0.03em;
-            margin-bottom: 4px;
+            line-height: 1.1;
+            text-align: center;
+            margin-bottom: 6px;
         }
 
-        .hero-subtitle {
-            font-size: 15px;
-            color: var(--secondary-label);
-            font-weight: 400;
+        .hero-role {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--accent);
+            text-align: center;
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
         }
 
-        /* ═══════════ CONTAINER ═══════════ */
-        .container {
-            max-width: 480px;
+        .hero-bio {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-dim);
+            text-align: center;
+            max-width: 380px;
             margin: 0 auto;
-            padding: 0 20px 48px;
+            letter-spacing: -0.01em;
+        }
+
+        /* ═══════════════════════════════════════════════
+           TERMINAL CARD (HUD)
+           ═══════════════════════════════════════════════ */
+        .terminal-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .terminal-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-elevated);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .terminal-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot--r { background: var(--term-red); }
+        .terminal-dot--y { background: var(--term-amber); }
+        .terminal-dot--g { background: var(--term-green); }
+
+        .terminal-title {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: 0.06em;
+        }
+
+        .terminal-body {
+            padding: 16px;
+        }
+
+        /* Spec rows */
+        .spec-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            font-family: var(--mono);
+            font-size: 11px;
+            padding: 5px 0;
+            cursor: default;
+            transition: color 0.2s ease;
+        }
+
+        .spec-row:hover .spec-val {
+            color: var(--accent);
+        }
+
+        .spec-key {
+            color: var(--text-faint);
+            width: 72px;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 10px;
+        }
+
+        .spec-val {
+            color: var(--text);
+            transition: color 0.2s ease;
+        }
+
+        .spec-val--accent { color: var(--accent); }
+        .spec-val--green { color: var(--term-green); }
+        .spec-val--amber { color: var(--term-amber); }
+
+        .spec-divider {
+            border: none;
+            border-top: 1px dashed var(--border-strong);
+            margin: 10px 0;
+        }
+
+        /* Boot lines */
+        .boot-line {
+            font-family: var(--mono);
+            font-size: 10px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .boot-line.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .boot-ok {
+            color: var(--term-green);
+        }
+
+        .boot-msg {
+            color: var(--text-faint);
+        }
+
+        /* ═══════════════════════════════════════════════
+           TECH MARQUEE
+           ═══════════════════════════════════════════════ */
+        .marquee-wrap {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            margin: 24px -20px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.6s ease 0.3s;
+        }
+
+        .marquee-wrap.visible {
+            opacity: 1;
+        }
+
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            white-space: nowrap;
+            animation: marqueeScroll 30s linear infinite;
+        }
+
+        .marquee-item {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .marquee-item::after {
+            content: '';
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--text-faint);
+        }
+
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ═══════════════════════════════════════════════
+           SECTION LABELS
+           ═══════════════════════════════════════════════ */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 10px;
+            padding: 0 2px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-strong);
+        }
+
+        /* ═══════════════════════════════════════════════
+           LINK CARDS (Glass)
+           ═══════════════════════════════════════════════ */
+        .links-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        /* ═══════════ SOCIAL ICON ROW ═══════════ */
-        .social-row {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 24px 0 32px;
+        .links-group.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .social-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px solid var(--separator);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--label);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:active {
-            background: var(--surface-hover);
-        }
-
-        @media (hover: hover) {
-            .social-icon:hover {
-                background: var(--surface);
-                border-color: var(--secondary-label);
-                transform: translateY(-3px) scale(1.1);
-                box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
-            }
-        }
-
-        .social-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* ═══════════ SECTION LABEL ═══════════ */
-        .section-label {
-            width: 100%;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--secondary-label);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 0 4px;
-            margin-bottom: 8px;
-        }
-
-        /* ═══════════ GROUPED LIST (iOS) ═══════════ */
-        .list-group {
-            width: 100%;
-            background: var(--surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin-bottom: 28px;
-        }
-
-        .list-item {
+        .link-card {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 13px 16px;
+            padding: 14px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             text-decoration: none;
-            color: var(--label);
-            transition: all 0.3s ease;
+            color: var(--text);
             position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .list-item:active {
-            background: var(--surface-hover);
-        }
-
-        @media (hover: hover) {
-            .list-item:hover {
-                background: var(--surface-hover);
-                transform: translateX(6px);
-            }
-            .list-item:hover .icon {
-                transform: scale(1.15) rotate(-3deg);
-            }
-        }
-
-        .list-item + .list-item::before {
+        .link-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 54px;
+            left: 0;
             right: 0;
-            height: 0.5px;
-            background: var(--separator);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
-        .list-item .icon {
-            width: 36px;
-            height: 36px;
+        .link-card:hover {
+            border-color: rgba(125, 211, 252, 0.2);
+            background: var(--surface-2);
+            transform: translateY(-2px) translateX(4px);
+            box-shadow: 0 8px 30px rgba(125, 211, 252, 0.06);
+        }
+
+        .link-card:hover::before {
+            opacity: 1;
+        }
+
+        .link-card:hover .link-icon {
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 0 16px rgba(125, 211, 252, 0.2);
+        }
+
+        .link-card:hover .link-title {
+            color: var(--accent);
+        }
+
+        .link-card:hover .link-chevron {
+            transform: translateX(3px);
+            color: var(--accent);
+        }
+
+        .link-card:active {
+            transform: translateY(0) translateX(2px);
+        }
+
+        .link-icon {
+            width: 38px;
+            height: 38px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .list-item .icon svg {
-            width: 20px;
-            height: 20px;
+        .link-icon svg {
+            width: 18px;
+            height: 18px;
             fill: #fff;
         }
 
-        .icon.instagram { background: #e1306c; }
-        .icon.github { background: #6e5494; }
-        .icon.linkedin { background: #0a66c2; }
-        .icon.tiktok { background: #010101; border: 0.5px solid var(--separator); }
+        .link-icon--portfolio { background: linear-gradient(135deg, var(--accent), #38bdf8); }
+        .link-icon--github { background: linear-gradient(135deg, #6e5494, #8b5cf6); }
+        .link-icon--linkedin { background: linear-gradient(135deg, #0a66c2, #0ea5e9); }
+        .link-icon--instagram { background: linear-gradient(135deg, #e1306c, #f97316); }
+        .link-icon--tiktok { background: #111; border: 0.5px solid var(--border-strong); }
+        .link-icon--whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+        .link-icon--email { background: linear-gradient(135deg, #ea4335, #ff6b6b); }
 
-        .icon.whatsapp { background: #25d366; }
-        .icon.gmail { background: #ea4335; }
-
-        .list-item .text {
+        .link-text {
             flex: 1;
             min-width: 0;
         }
 
-        .list-item .title {
-            font-size: 16px;
-            font-weight: 400;
+        .link-title {
+            font-size: 15px;
+            font-weight: 500;
             letter-spacing: -0.01em;
+            transition: color 0.3s ease;
         }
 
-        .list-item .subtitle {
-            font-size: 13px;
-            color: var(--secondary-label);
-            margin-top: 1px;
+        .link-subtitle {
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--text-faint);
+            margin-top: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .list-item .chevron {
+        .link-chevron {
             flex-shrink: 0;
-            color: var(--tertiary-label);
+            color: var(--text-faint);
+            transition: all 0.3s ease;
         }
 
-        .list-item .chevron svg {
+        .link-chevron svg {
             width: 14px;
             height: 14px;
             fill: none;
@@ -254,200 +731,392 @@
             stroke-linejoin: round;
         }
 
-        /* ═══════════ FOOTER ═══════════ */
-        .footer {
-            text-align: center;
-            padding-top: 12px;
-        }
-
-        .footer p {
-            font-size: 12px;
-            color: var(--tertiary-label);
-        }
-
-        /* ═══════════ ANIMATIONS ═══════════ */
-        .hero {
-            animation: fadeIn 0.8s ease;
-        }
-
-        .hero-image {
-            animation: subtleZoom 20s ease-in-out infinite alternate;
-        }
-
-        .hero-name {
-            animation: fadeUp 0.6s ease 0.3s backwards;
-        }
-
-        .hero-subtitle {
-            animation: fadeUp 0.6s ease 0.45s backwards;
-        }
-
+        /* ═══════════════════════════════════════════════
+           SOCIAL ROW (icon-only)
+           ═══════════════════════════════════════════════ */
         .social-row {
-            animation: fadeUp 0.5s ease 0.5s backwards;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px 0 28px;
+            opacity: 0;
+            transition: opacity 0.6s ease 0.2s;
+        }
+
+        .social-row.visible {
+            opacity: 1;
         }
 
         .social-icon {
-            animation: popIn 0.4s ease backwards;
-        }
-        .social-icon:nth-child(1) { animation-delay: 0.55s; }
-        .social-icon:nth-child(2) { animation-delay: 0.65s; }
-        .social-icon:nth-child(3) { animation-delay: 0.75s; }
-        .social-icon:nth-child(4) { animation-delay: 0.85s; }
-        .social-icon:nth-child(5) { animation-delay: 0.95s; }
-
-        .section-label {
-            animation: fadeUp 0.5s ease 1s backwards;
-        }
-
-        .list-group {
-            animation: fadeUp 0.5s ease 1.05s backwards;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: var(--surface);
         }
 
-        .list-item {
-            animation: slideIn 0.4s ease backwards;
+        .social-icon:hover {
+            color: var(--accent);
+            border-color: rgba(125, 211, 252, 0.3);
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 6px 20px rgba(125, 211, 252, 0.12);
         }
-        .list-item:nth-child(1) { animation-delay: 1.1s; }
-        .list-item:nth-child(2) { animation-delay: 1.2s; }
-        .list-item:nth-child(3) { animation-delay: 1.3s; }
-        .list-item:nth-child(4) { animation-delay: 1.4s; }
 
+        .social-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ═══════════════════════════════════════════════
+           TYPING CURSOR
+           ═══════════════════════════════════════════════ */
+        .caret {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: caretBlink 1s step-end infinite;
+        }
+
+        @keyframes caretBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════ */
         .footer {
-            animation: fadeUp 0.5s ease 1.5s backwards;
+            text-align: center;
+            padding: 24px 0 48px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .footer.visible {
+            opacity: 1;
         }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
+        .footer-line {
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 16px;
         }
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+        .footer-text {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--text-faint);
+            letter-spacing: 0.08em;
         }
 
-        @keyframes subtleZoom {
-            from { transform: scale(1); }
-            to { transform: scale(1.08); }
-        }
-
-        /* Ambient glow behind container */
-        .container::before {
-            content: '';
-            position: fixed;
-            top: 30%;
-            left: 50%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
-            transform: translateX(-50%);
+        .footer-dot {
+            width: 3px;
+            height: 3px;
             border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            animation: glowPulse 6s ease-in-out infinite alternate;
+            background: var(--text-faint);
         }
 
-        @keyframes glowPulse {
-            from { opacity: 0.4; transform: translateX(-50%) scale(1); }
-            to { opacity: 0.8; transform: translateX(-50%) scale(1.3); }
-        }
-
+        /* ═══════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════ */
         @media (max-width: 480px) {
-            .hero { height: 380px; }
+            .cover-hero { height: 380px; }
             .hero-name { font-size: 26px; }
         }
+
+        /* ═══════════════════════════════════════════════
+           STAGGER ANIMATIONS
+           ═══════════════════════════════════════════════ */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+        .stagger-7 { transition-delay: 0.7s; }
     </style>
 </head>
 <body>
 
-    <!-- Hero cover photo with name overlay -->
-    <div class="hero">
-        <img class="hero-image" src="
-            IMG-20260413-WA0020.jpg" alt="Habib">
-        <div class="hero-info">
-            <h1 class="hero-name">Habiboullah Afouk</h1>
-            <p class="hero-subtitle">Developer · Creator</p>
+    <!-- ══════ BOOT SCREEN ══════ -->
+    <div class="boot-screen" id="bootScreen">
+        <div class="boot-label">habiboullah@links · booting</div>
+        <div class="boot-percent" id="bootPercent">0%</div>
+        <div class="boot-status" id="bootStatus">Mounting environment</div>
+        <div class="boot-bar-track">
+            <div class="boot-bar-fill" id="bootBar"></div>
         </div>
     </div>
 
-    <div class="container">
+    <!-- ══════ COVER PHOTO HERO ══════ -->
+    <div class="cover-hero" id="coverHero">
+        <img class="cover-hero__img" src="new image of me.png" alt="Habiboullah Afouk">
+        <div class="cover-hero__info">
+            <div class="cover-hero__tag">FIG 0.0 · Identity</div>
+            <h1 class="hero-name">Habiboullah Afouk</h1>
+            <p class="hero-role">Full-Stack Software Developer</p>
+        </div>
+    </div>
 
-        <!-- Social icon row -->
-        <div class="social-row">
-            <a href="https://www.instagram.com/7__habib?igsh=MTBsMDBlcDh4NjcxdQ==" target="_blank" rel="noopener" class="social-icon" title="Instagram">
-                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            </a>
-            <a href="https://www.tiktok.com/@bigel0rd?_r=1&_t=ZS-94zG2ZKuqAh" target="_blank" rel="noopener" class="social-icon" title="TikTok">
-                <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-            </a>
-            <a href="https://github.com/black-american-dev" target="_blank" rel="noopener" class="social-icon" title="GitHub">
+    <!-- ══════ OVERLAYS ══════ -->
+    <div class="grain" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="particles" id="particles" aria-hidden="true"></div>
+    <div class="glow-orb glow-orb--1" aria-hidden="true"></div>
+    <div class="glow-orb glow-orb--2" aria-hidden="true"></div>
+
+    <!-- ══════ MAIN CONTENT ══════ -->
+    <div class="shell">
+
+        <!-- STATUS + BIO -->
+        <section class="content-below" id="contentBelow">
+            <div style="display:flex;justify-content:center;margin:24px 0 16px;">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Available</span>
+                </div>
+            </div>
+            <p class="hero-bio">Modern web, desktop &amp; mobile applications — built with care for performance, design, and the problems they solve.</p>
+        </section>
+
+        <!-- SOCIAL ROW -->
+        <div class="social-row" id="socialRow">
+            <a href="https://github.com/Habiboullah-Afouk" target="_blank" rel="noopener" class="social-icon" title="GitHub">
                 <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
             </a>
             <a href="https://www.linkedin.com/in/habiboullah-afouk-209a433b9/" target="_blank" rel="noopener" class="social-icon" title="LinkedIn">
                 <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
             </a>
-            <a href="https://wa.me/212638785231" target="_blank" rel="noopener" class="social-icon" title="WhatsApp">
+            <a href="https://www.instagram.com/7__habib?igsh=MTBsMDBlcDh4NjcxdQ==" target="_blank" rel="noopener" class="social-icon" title="Instagram">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@7__habib" target="_blank" rel="noopener" class="social-icon" title="TikTok">
+                <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            </a>
+            <a href="https://wa.link/a081tc" target="_blank" rel="noopener" class="social-icon" title="WhatsApp">
                 <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             </a>
         </div>
 
-        <!-- Links -->
-        <p class="section-label">Links</p>
-        <div class="list-group">
-            <a href="https://github.com/black-american-dev" target="_blank" rel="noopener" class="list-item">
-                <div class="icon github">
+
+
+        <!-- TECH MARQUEE -->
+        <div class="marquee-wrap" id="marqueeWrap">
+            <div class="marquee-track">
+                <span class="marquee-item">React</span>
+                <span class="marquee-item">Laravel</span>
+                <span class="marquee-item">Node.js</span>
+                <span class="marquee-item">React Native</span>
+                <span class="marquee-item">Electron</span>
+                <span class="marquee-item">Docker</span>
+                <span class="marquee-item">MySQL</span>
+                <span class="marquee-item">SQLite</span>
+                <span class="marquee-item">MongoDB</span>
+                <span class="marquee-item">Linux</span>
+                <span class="marquee-item">Bash</span>
+                <span class="marquee-item">TypeScript</span>
+                <!-- duplicate for seamless loop -->
+                <span class="marquee-item">React</span>
+                <span class="marquee-item">Laravel</span>
+                <span class="marquee-item">Node.js</span>
+                <span class="marquee-item">React Native</span>
+                <span class="marquee-item">Electron</span>
+                <span class="marquee-item">Docker</span>
+                <span class="marquee-item">MySQL</span>
+                <span class="marquee-item">SQLite</span>
+                <span class="marquee-item">MongoDB</span>
+                <span class="marquee-item">Linux</span>
+                <span class="marquee-item">Bash</span>
+                <span class="marquee-item">TypeScript</span>
+            </div>
+        </div>
+
+        <!-- LINKS -->
+        <div class="section-label stagger-3">FIG 0.1 · Connect</div>
+        <div class="links-group stagger-4" id="linksGroup">
+
+            <a href="https://habib-portofolio-livid.vercel.app/" target="_blank" rel="noopener" class="link-card" id="link-portfolio">
+                <div class="link-icon link-icon--portfolio">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zM6 10h2v2H6v-2zm0 4h8v2H6v-2zm10 0h2v2h-2v-2zm-6-4h8v2h-8v-2z"/></svg>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Portfolio</div>
+                    <div class="link-subtitle">habib-portofolio-livid.vercel.app</div>
+                </div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+            </a>
+
+            <a href="https://github.com/Habiboullah-Afouk" target="_blank" rel="noopener" class="link-card" id="link-github">
+                <div class="link-icon link-icon--github">
                     <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 </div>
-                <div class="text">
-                    <div class="title">GitHub</div>
-                    <div class="subtitle">My projects & code</div>
+                <div class="link-text">
+                    <div class="link-title">GitHub</div>
+                    <div class="link-subtitle">My projects & open-source code</div>
                 </div>
-                <div class="chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </a>
-            <a href="https://www.linkedin.com/in/habiboullah-afouk-209a433b9/" target="_blank" rel="noopener" class="list-item">
-                <div class="icon linkedin">
+
+            <a href="https://www.linkedin.com/in/habiboullah-afouk-209a433b9/" target="_blank" rel="noopener" class="link-card" id="link-linkedin">
+                <div class="link-icon link-icon--linkedin">
                     <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                 </div>
-                <div class="text">
-                    <div class="title">LinkedIn</div>
-                    <div class="subtitle">Professional profile</div>
+                <div class="link-text">
+                    <div class="link-title">LinkedIn</div>
+                    <div class="link-subtitle">Professional profile</div>
                 </div>
-                <div class="chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </a>
-            <a href="https://wa.me/212638785231" target="_blank" rel="noopener" class="list-item">
-                <div class="icon whatsapp">
+
+            <a href="https://www.instagram.com/7__habib?igsh=MTBsMDBlcDh4NjcxdQ==" target="_blank" rel="noopener" class="link-card" id="link-instagram">
+                <div class="link-icon link-icon--instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Instagram</div>
+                    <div class="link-subtitle">@7__habib</div>
+                </div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+            </a>
+
+            <a href="https://www.tiktok.com/@7__habib"_blank" rel="noopener" class="link-card" id="link-tiktok">
+                <div class="link-icon link-icon--tiktok">
+                    <svg viewBox="0 0 24 24" fill="#fff"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">TikTok</div>
+                    <div class="link-subtitle">@7__habib</div>
+                </div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+            </a>
+
+            <a href="https://wa.link/a081tc" target="_blank" rel="noopener" class="link-card" id="link-whatsapp">
+                <div class="link-icon link-icon--whatsapp">
                     <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 </div>
-                <div class="text">
-                    <div class="title">WhatsApp</div>
-                    <div class="subtitle">Message me directly</div>
+                <div class="link-text">
+                    <div class="link-title">WhatsApp</div>
+                    <div class="link-subtitle">Message me directly</div>
                 </div>
-                <div class="chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </a>
-            <a href="mailto:afoukhabiboullah@gmail.com" class="list-item">
-                <div class="icon gmail">
+
+            <a href="mailto:sa27021984@gmail.com" class="link-card" id="link-email">
+                <div class="link-icon link-icon--email">
                     <svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
                 </div>
-                <div class="text">
-                    <div class="title">Email</div>
-                    <div class="subtitle">Get in touch</div>
+                <div class="link-text">
+                    <div class="link-title">Email</div>
+                    <div class="link-subtitle">sa27021984@gmail.com</div>
                 </div>
-                <div class="chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+                <div class="link-chevron"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </a>
         </div>
 
-        <footer class="footer">
-            <p>© 2026 Habib</p>
+        <!-- FOOTER -->
+        <footer class="footer" id="footerSection">
+            <div class="footer-line"></div>
+            <div class="footer-content">
+                <span class="footer-text">© 2026 Habiboullah Afouk</span>
+                <span class="footer-dot"></span>
+                <span class="footer-text">Laayoune, Morocco</span>
+                <span class="footer-dot"></span>
+                <span class="footer-text" style="display:flex;align-items:center;gap:4px;">
+                    <span class="caret" style="width:6px;height:12px;"></span>
+                </span>
+            </div>
         </footer>
+
     </div>
+
+    <!-- ══════ JAVASCRIPT ══════ -->
+    <script>
+        // ─── Boot Sequence ───
+        (function() {
+            const bootScreen = document.getElementById('bootScreen');
+            const bootPercent = document.getElementById('bootPercent');
+            const bootBar = document.getElementById('bootBar');
+            const bootStatus = document.getElementById('bootStatus');
+
+            const statuses = [
+                'Mounting environment',
+                'Loading identity module',
+                'Connecting protocols',
+                'Resolving endpoints',
+                'System online'
+            ];
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    bootPercent.textContent = '100%';
+                    bootBar.style.width = '100%';
+                    bootStatus.textContent = 'System online';
+                    setTimeout(() => {
+                        bootScreen.classList.add('hidden');
+                        revealContent();
+                    }, 400);
+                    return;
+                }
+                const p = Math.floor(progress);
+                bootPercent.textContent = p + '%';
+                bootBar.style.width = p + '%';
+                const statusIdx = Math.min(Math.floor(p / 25), statuses.length - 1);
+                bootStatus.textContent = statuses[statusIdx];
+            }, 120);
+        })();
+
+        // ─── Floating Particles ───
+        (function() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 15) + 's';
+                p.style.width = (Math.random() * 2 + 1) + 'px';
+                p.style.height = p.style.width;
+                container.appendChild(p);
+            }
+        })();
+
+        // ─── Reveal Content After Boot ───
+        function revealContent() {
+            const contentBelow = document.getElementById('contentBelow');
+            const socialRow = document.getElementById('socialRow');
+            const marqueeWrap = document.getElementById('marqueeWrap');
+            const linksGroup = document.getElementById('linksGroup');
+            const footerSection = document.getElementById('footerSection');
+
+            setTimeout(() => contentBelow.classList.add('visible'), 100);
+            setTimeout(() => socialRow.classList.add('visible'), 300);
+            setTimeout(() => marqueeWrap.classList.add('visible'), 500);
+            setTimeout(() => linksGroup.classList.add('visible'), 700);
+            setTimeout(() => footerSection.classList.add('visible'), 900);
+        }
+    </script>
+
 </body>
 </html>
